@@ -1,0 +1,1 @@
+# vacío, solo necesario para que Odoo reconozca el módulo

@@ -20,16 +20,18 @@
                     <thead class="table-header">
                         <tr>
                             <th>Descripción</th>
-                            <th class="text-center">Cantidad</th>
+                            <th class="text-center" name="th_quantity">Cantidad</th>
                             <th class="text-center">Unidad</th>
+                            <th name="th_discount">Descuentos</th>
                             <th class="text-end">Total</th>
                         </tr>
                     </thead>
                     <tbody class="table-striped">
                         <tr t-foreach="doc.order_line" t-as="line">
                             <td><span t-field="line.name"/></td>
-                            <td class="text-center"><span t-field="line.product_uom_qty"/></td>
-                            <td class="text-center"><span t-field="line.product_uom.name"/></td>
+                            <td class="text-center" name="td_product_quantity"><span t-field="line.product_uom_qty"/></td>
+                            <td class="text-center"><span t-if="line.product_uom_id" t-field="line.product_uom_id.name"/></td>
+                            <td name="td_product_discount"></td>
                             <td class="text-end">
                                 <span t-field="line.price_total" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
                             </td>
@@ -44,6 +46,9 @@
                             <tr class="total-box"><td>TOTAL</td><td class="text-end"><span t-field="doc.amount_total"/></td></tr>
                         </table>
                     </div>
+                </div>
+
+                <div id="informations">
                 </div>
             </div>
         </xpath>

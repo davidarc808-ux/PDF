@@ -1,87 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <template id="report_saleorder_document_inherit" inherit_id="sale.report_saleorder_document" priority="99">
+        <xpath expr="//div[hasclass('page')]" position="replace">
+            <div class="page">
+                <style>
+                    .table-header { background-color: #6c757d !important; color: white !important; }
+                    .table-striped tbody tr:nth-of-type(odd) { background-color: #f2f2f2; }
+                    .total-box { background-color: #6c757d; color: white; padding: 10px; font-weight: bold; }
+                </style>
 
-    <template id="report_saleorder_document_inherit" inherit_id="sale.report_saleorder_raw">
-    
-        <xpath expr="//t[@t-foreach='docs']" position="replace">
-            <t t-foreach="docs" t-as="o"></t>
-                <div class="page">
-
-                    <div style="display:flex; justify-content:space-between;">
-                        
-                        <div>
-
-                            <img t-if="company.logo"
-                                t-att-src="'data:image/png;base64,%s' % company.logo"
-                                style="max-height:100px;"/>
-                            
-                            <h2><span t-out="company.name"/></h2>
-
-                            <p>
-                                <span t-out="o.partner_id.name"/><br/>
-                                <span t-out="o.partner_id.email"/><br/>
-                                <span t-out="o.partner_id.phone"/>
-                            </p>
-                        </div>
-                        <div>
-                            <span t-out="o.date_order"/>
-                        </div>
-                    </div> 
-            
-
-            <br/><br/>
-
-                <!-- TABLA -->
-             <table style="width:100%; border-collapse:collapse;">
-                <thead style="background:#6c6c6c; color:white;">
-                    <tr>
-                        <th>Descripción</th>
-                        <th>Cantidad</th>
-                        <th>Und</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr t-foreach="o.order_line" t-as="line">
-                        <td><span t-out="line.name"/></td>
-                        <td class="text-center">
-                            <span t-out="line.product_uom_qty"/>
-                        </td>
-                        <td class="text-center">
-                            <span t-out="line.product_uom.name"/>
-                        </td>
-                        <td class="text-right">
-                            <span t-out="line.price_total"/>
-                        </td>
-                    </tr>
-                </tbody>
-             </table>
-             <br/><br/>
-
-                <!-- TOTALES -->
-            <div style="width:40%; float:right;">
-                <p><strong>SUBTOTAL</strong>
-                    <span t-out="o.amount_untaxed"/>
-                </p>
-
-                <p><strong>DESCUENTO</strong>
-                    <span t-esc="sum(line.price_subtotal * line.discount / 100 for line in o.order_line)"/>                
-                </p>
-                
-                <div style="background:#6c6c6c; color:white; padding: 10px;">
-                    <strong>TOTAL:</strong>
-                    <span t-out="o.amount_total"/>
+                <div class="row">
+                    <div class="col-6">
+                        <img t-if="doc.company_id.logo" t-att-src="image_data_uri(doc.company_id.logo)" style="max-height: 80px;"/>
+                        <h3><span t-field="doc.company_id.name"/></h3>
+                    </div>
                 </div>
-            </div>
-            <br/><br/><br/>
 
-                <!-- NOTA-->
-                <div>
-                    <strong>Nota:</strong>
-                    <p>
-                        La cotización es válida por 7 días.
-                        La fecha de ejecución del servicio se considerará segun disponibilidad.
-                    </p>
+                <table class="table table-sm mt-4">
+                    <thead class="table-header">
+                        <tr>
+                            <th>Descripción</th>
+                            <th class="text-center">Cantidad</th>
+                            <th class="text-center">Unidad</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-striped">
+                        <tr t-foreach="doc.order_line" t-as="line">
+                            <td><span t-field="line.name"/></td>
+                            <td class="text-center"><span t-field="line.product_uom_qty"/></td>
+                            <td class="text-center"><span t-field="line.product_uom.name"/></td>
+                            <td class="text-end">
+                                <span t-field="line.price_total" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="row justify-content-end mt-4">
+                    <div class="col-4">
+                        <table class="table table-sm">
+                            <tr><td>Subtotal</td><td class="text-end"><span t-field="doc.amount_untaxed"/></td></tr>
+                            <tr class="total-box"><td>TOTAL</td><td class="text-end"><span t-field="doc.amount_total"/></td></tr>
+                        </table>
+                    </div>
                 </div>
             </div>
         </xpath>

@@ -1,7 +1,7 @@
 {
     "name": "Sale Custom Reports",
     "version": "1.0",
-    "depends": ["sale"],
+    "depends": ["sale", "sale_management"],
     "data": [
         "reports/sale_order_report.xml",
     ],
